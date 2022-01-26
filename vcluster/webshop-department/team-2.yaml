@@ -30,7 +30,7 @@ spec:
             - --service-cidr=10.32.0.0/12
         ingress:
           enabled: true
-          host: team-1.ediri.cloud
+          host: team-2.ediri.cloud
           annotations:
             external-dns.alpha.kubernetes.io/hostname: team-2.ediri.cloud
             external-dns.alpha.kubernetes.io/ttl: "60"
