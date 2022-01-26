@@ -7,7 +7,7 @@ metadata:
     department: development
     project: frontend
     distro: k3s
-    version: v1.23.2-k3s1
+    version: v1.21.4-k3s1
   annotations:
     argocd.argoproj.io/sync-wave: "99"
 spec:
@@ -31,7 +31,7 @@ spec:
             - --tls-san=team-1.ediri.cloud
             - --out-kube-config-server=https://team-1.ediri.cloud
         vcluster:
-          image: rancher/k3s:v1.23.2-k3s1
+          image: rancher/k3s:v1.21.4-k3s1
           extraArgs:
             - --service-cidr=10.32.0.0/12
         ingress:
