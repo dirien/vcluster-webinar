@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: team-1
+  name: team-2
   annotations:
     argocd.argoproj.io/sync-wave: "99"
 spec:
