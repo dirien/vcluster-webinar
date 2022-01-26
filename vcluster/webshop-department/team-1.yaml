@@ -28,7 +28,6 @@ spec:
           image: rancher/k3s:v1.23.2-k3s1
           extraArgs:
             - --service-cidr=10.32.0.0/12
-            - --tls-san=team-1.ediri.cloud
         ingress:
           enabled: true
           host: team-1.ediri.cloud
