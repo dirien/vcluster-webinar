@@ -1,0 +1,41 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-cert
+  namespace: monitoring
+spec:
+  commonName: grafana.ediri.cloud
+  dnsNames:
+    - grafana.ediri.cloud
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-staging
+  secretName: grafana-tls-cert
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: prometheus-cert
+  namespace: monitoring
+spec:
+  commonName: prometheus.ediri.cloud
+  dnsNames:
+    - prometheus.ediri.cloud
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-staging
+  secretName: prometheus-tls-cert
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: alertmanager-cert
+  namespace: monitoring
+spec:
+  commonName: alertmanager.ediri.cloud
+  dnsNames:
+    - alertmanager.ediri.cloud
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-staging
+  secretName: alertmanager-tls-cert
