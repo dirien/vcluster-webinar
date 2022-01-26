@@ -4,5 +4,4 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-  - cluster-k3s
-  - cluster-k0s
+  - webshop-department

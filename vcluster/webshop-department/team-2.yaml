@@ -6,8 +6,8 @@ metadata:
     team: team-2
     department: development
     project: backend
-    distro: k0s
-    version: v1.23.1-k0s.1
+    distro: k3s
+    version: v1.23.2-k3s1
   annotations:
     argocd.argoproj.io/sync-wave: "99"
 spec:
@@ -20,13 +20,20 @@ spec:
     targetRevision: 0.6.0-alpha.7
     helm:
       values: |-
+        syncer:
+          extraArgs:
+            - --tls-san=team-2.ediri.cloud
+            - --out-kube-config-server=https://team-2.ediri.cloud
         vcluster:
-          image: k0sproject/k0s:v1.23.1-k0s.1
+          image: rancher/k3s:v1.23.2-k3s1
           extraArgs:
             - --service-cidr=10.32.0.0/12
         ingress:
           enabled: true
-          host: team-2.ediri.cloud
+          host: team-1.ediri.cloud
+          annotations:
+            external-dns.alpha.kubernetes.io/hostname: team-2.ediri.cloud
+            external-dns.alpha.kubernetes.io/ttl: "60"
     chart: vcluster
   syncPolicy:
     syncOptions:
