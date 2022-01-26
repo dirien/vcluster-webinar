@@ -20,6 +20,12 @@ spec:
     targetRevision: 0.6.0-alpha.7
     helm:
       values: |-
+        rbac:
+          clusterRole:
+            create: true
+          role:
+            create: true
+            extended: true
         syncer:
           extraArgs:
             - --tls-san=team-1.ediri.cloud
