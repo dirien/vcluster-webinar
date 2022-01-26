@@ -2,6 +2,12 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: team-2
+  labels:
+    team: team-2
+    department: development
+    project: backend
+    distro: k0s
+    version: v1.23.1-k0s.1
   annotations:
     argocd.argoproj.io/sync-wave: "99"
 spec:
@@ -20,12 +26,7 @@ spec:
             - --service-cidr=10.32.0.0/12
         ingress:
           enabled: true
-          ingressClassName: nginx
           host: team-2.ediri.cloud
-          annotations:
-            nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-            nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-            nginx.ingress.kubernetes.io/ssl-redirect: "true"
     chart: vcluster
   syncPolicy:
     syncOptions:
