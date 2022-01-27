@@ -20,12 +20,26 @@ spec:
     targetRevision: 0.6.0-alpha.7
     helm:
       values: |-
+        rbac:
+          clusterRole:
+            create: true
+          role:
+            create: true
+            extended: true
+        syncer:
+          extraArgs:
+            - --tls-san=team-2.ediri.cloud
+            - --out-kube-config-server=https://team-2.ediri.cloud
         vcluster:
           image: rancher/k3s:v1.21.4-k3s1
           extraArgs:
             - --service-cidr=10.32.0.0/12
         ingress:
-          enabled: false
+          enabled: true
+          host: team-2.ediri.cloud
+          annotations:
+            external-dns.alpha.kubernetes.io/hostname: team-2.ediri.cloud
+            external-dns.alpha.kubernetes.io/ttl: "60"
     chart: vcluster
   syncPolicy:
     syncOptions:
