@@ -18,6 +18,7 @@ jobs:
         with:
           go-version: 1.17
       - run: go mod download
+        working-directory: infrastructure/controlplane-scaleway
       - uses: pulumi/actions@v3
         with:
           command: preview
@@ -39,6 +40,7 @@ jobs:
         with:
           go-version: 1.17
       - run: go mod download
+        working-directory: infrastructure/controlplane-scaleway
       - uses: pulumi/actions@v3
         with:
           command: up
