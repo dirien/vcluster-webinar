@@ -17,7 +17,7 @@ tasks:
     env:
       KUBECONFIG: ../infrastructure/controlplane-scaleway/kubeconfig.yaml
     cmds:
-      - kubectl apply -k .
+      - kubectl apply -f applications.yaml
 
   infrastructure:
     dir: infrastructure/controlplane-scaleway

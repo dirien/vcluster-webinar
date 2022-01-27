@@ -6,3 +6,4 @@ namespace: argocd
 resources:
   - webshop-department
   - webshop-backend/team-3.yaml
+  - beta-test-k0s/team-4.yaml
