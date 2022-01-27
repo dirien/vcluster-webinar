@@ -5,8 +5,8 @@ on:
     tags:
       - '*'
   pull_request:
-    paths-ignore:
-      - '**/.github/'
+    paths:
+      - "infrastructure/controlplane-scaleway/**"
 
 jobs:
   preview:
