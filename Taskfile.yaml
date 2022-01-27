@@ -1,0 +1,34 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  workaround:
+    dir: workaround/kube-prometheus-stack-crds
+    env:
+      KUBECONFIG: ../../infrastructure/controlplane-scaleway/kubeconfig.yaml
+    cmds:
+      - cmd: kubectl delete -k .
+        ignore_error: true
+      - kubectl create -k .
+
+  applications:
+    dir: applications/
+    env:
+      KUBECONFIG: ../infrastructure/controlplane-scaleway/kubeconfig.yaml
+    cmds:
+      - kubectl apply -k .
+
+  infrastructure:
+    dir: infrastructure/controlplane-scaleway
+    env:
+      KUBECONFIG: kubeconfig.yaml
+    cmds:
+      - pulumi up -y
+      - pulumi stack output kubeconfig --show-secrets > kubeconfig.yaml
+
+  get-service-cidr:
+    env:
+      KUBECONFIG: infrastructure/controlplane-scaleway/kubeconfig.yaml
+    cmds:
+      - kubectl create service clusterip test --clusterip 1.1.1.1 --tcp=80:80

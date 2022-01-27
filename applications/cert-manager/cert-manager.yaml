@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  destination:
+    name: in-cluster
+    namespace: cert-manager
+  project: default
+  source:
+    repoURL: 'https://charts.jetstack.io'
+    targetRevision: v1.6.1
+    helm:
+      values: |-
+        prometheus:
+          enabled: true
+          servicemonitor:
+            enabled: true
+        serviceAccount:
+          automountServiceAccountToken: true
+        installCRDs: true
+    chart: cert-manager
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

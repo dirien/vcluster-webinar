@@ -1,0 +1,5 @@
+config:
+  scaleway:access_key:
+    secure: AAABAKlFDbmR1DIbuxI8pPx2RgW6xNQasn3ZT6puy1voYam+dyTBtxph0yvUidKNe5jNkg==
+  scaleway:secret_key:
+    secure: AAABAEq6vd2tswl2XHfmsIGDHsNUfuWM7PJaGPtJg4lgqJbhdS6rHlslg1+a8BRFnI/SqomLy/V12f/DT55MEisZF1k=

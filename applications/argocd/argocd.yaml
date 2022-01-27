@@ -1,0 +1,76 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  destination:
+    name: in-cluster
+    namespace: argocd
+  project: default
+  source:
+    repoURL: 'https://argoproj.github.io/argo-helm'
+    targetRevision: 3.29.5
+    helm:
+      values: |-
+       controller:
+         serviceAccount:
+           automountServiceAccountToken: true
+         metrics:
+           enabled: true
+           serviceMonitor:
+             enabled: true
+       dex:
+         enabled: false
+       
+       redis:
+         metrics:
+           enabled: true
+           serviceMonitor:
+             enabled: true
+         serviceAccount:
+           automountServiceAccountToken: true
+       
+       server:
+         metrics:
+           enabled: true
+           serviceMonitor:
+             enabled: true
+         serviceAccount:
+           automountServiceAccountToken: true
+         config:
+           url: https://argocd.ediri.cloud
+         extraArgs:
+           - --insecure
+         certificate:
+           enabled: true
+           secretName: argocd-tls 
+           domain: argocd.ediri.cloud
+           issuer:
+            kind: ClusterIssuer
+            name: letsencrypt-staging
+         ingress:
+            ingressClassName: nginx
+            annotations:
+                 external-dns.alpha.kubernetes.io/hostname: prometheus.ediri.cloud
+                 external-dns.alpha.kubernetes.io/ttl: "60"
+            hosts:
+             - argocd.ediri.cloud
+            enabled: true
+            tls:
+             - secretName: argocd-tls
+               hosts:
+                 - argocd.ediri.cloud
+       repoServer:
+           metrics:
+             enabled: true
+           serviceMonitor:
+             enabled: true
+           serviceAccount:
+             automountServiceAccountToken: true
+    chart: argo-cd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
