@@ -17,7 +17,10 @@ jobs:
       - uses: actions/setup-go@v2.1.5
         with:
           go-version: 1.17
-      - run: go mod download
+      - run:  |
+          go mod download
+          curl -fsSL https://get.pulumi.com | sh
+          pulumi plugin install resource scaleway v0.1.8 --server https://dl.briggs.work/pulumi/releases/plugins
         working-directory: infrastructure/controlplane-scaleway
       - uses: pulumi/actions@v3
         with:
@@ -25,7 +28,7 @@ jobs:
           stack-name: dev
           comment-on-pr: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          work-dir: infrastructure/controlplane-scaleway
+          work-dir: ./infrastructure/controlplane-scaleway
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
   up:
@@ -39,13 +42,16 @@ jobs:
       - uses: actions/setup-go@v2.1.5
         with:
           go-version: 1.17
-      - run: go mod download
+      - run:  |
+          go mod download
+          curl -fsSL https://get.pulumi.com | sh
+          pulumi plugin install resource scaleway v0.1.8 --server https://dl.briggs.work/pulumi/releases/plugins
         working-directory: infrastructure/controlplane-scaleway
       - uses: pulumi/actions@v3
         with:
           command: up
           stack-name: dev
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          work-dir: infrastructure/controlplane-scaleway
+          work-dir: ./infrastructure/controlplane-scaleway
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
