@@ -1,0 +1,104 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kube-prometheus-stack
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  destination:
+    name: in-cluster
+    namespace: monitoring
+  project: default
+  source:
+    repoURL: 'https://prometheus-community.github.io/helm-charts'
+    targetRevision: 30.1.0
+    helm:
+      values: |-
+        grafana:
+          persistence:
+            enabled: true
+            size: 10Gi
+          enabled: true
+          sidecar:
+            dashboards:
+              searchNamespace: "ALL"
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              external-dns.alpha.kubernetes.io/hostname: grafana.ediri.cloud
+              external-dns.alpha.kubernetes.io/ttl: "60"
+            hosts:
+              - grafana.ediri.cloud
+            tls:
+              - secretName: grafana-tls-cert
+                hosts:
+                  - grafana.ediri.cloud
+          grafana.ini:
+            server:
+              root_url: https://grafana.ediri.cloud
+        kubeEtcd:
+          enabled: true
+        kube-state-metrics:
+          enabled: true
+        prometheus-node-exporter:
+          enabled: true
+          prometheus:
+            monitor:
+              enabled: true
+        prometheus:
+          enabled: true
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              external-dns.alpha.kubernetes.io/hostname: prometheus.ediri.cloud
+              external-dns.alpha.kubernetes.io/ttl: "60"
+            hosts:
+              - prometheus.ediri.cloud
+            tls:
+              - secretName: prometheus-tls-cert
+                hosts:
+                  - prometheus.ediri.cloud
+          prometheusSpec:
+            serviceMonitorSelectorNilUsesHelmValues: false
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 50Gi
+        alertmanager:
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            annotations:
+              external-dns.alpha.kubernetes.io/hostname: alertmanager.ediri.cloud
+              external-dns.alpha.kubernetes.io/ttl: "60"
+            hosts:
+              - alertmanager.ediri.cloud
+            tls:
+              - secretName: alertmanager-tls-cert
+                hosts:
+                  - alertmanager.ediri.cloud
+          enabled: true
+          alertmanagerSpec:
+            storage:
+             volumeClaimTemplate:
+              spec:
+                 accessModes:
+                  - ReadWriteOnce
+                 resources:
+                   requests:
+                     storage: 50Gi
+          statefulSet:
+            enabled: true
+    chart: kube-prometheus-stack
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true

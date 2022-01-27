@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+spec:
+  destination:
+    name: in-cluster
+    namespace: external-dns
+  project: default
+  source:
+    repoURL: 'https://kubernetes-sigs.github.io/external-dns'
+    targetRevision: 1.7.1
+    helm:
+      values: |-
+        env:
+        - name: SCW_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: external-dns-credentials
+              key: access_key
+        - name: SCW_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: external-dns-credentials
+              key: secret_key
+        serviceMonitor:
+          enabled: true
+          additionalLabels:
+            app: external-dns
+        provider: scaleway
+        domainFilters:
+        - ediri.cloud
+        sources:
+        - ingress
+    chart: external-dns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
